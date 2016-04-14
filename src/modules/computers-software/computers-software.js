@@ -1,7 +1,6 @@
 angular.module('ualib.computers', [
     'ngRoute',
     'ngResource',
-    'oc.lazyLoad',
     'computersSoftware.templates',
     'ualib.computers.admin',
     'ualib.computers.signage'

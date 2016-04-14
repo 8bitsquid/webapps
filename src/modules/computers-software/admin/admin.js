@@ -10,12 +10,6 @@ angular.module('ualib.computers.admin', [
                 resolve: {
                     mapdata: ['Computers', '$route', function(Computers, $route){
                         return Computers.init($route.current.params, {noRefresh: true});
-                    }],
-                    loadDeps: ['$ocLazyLoad', function($ocLazyLoad){
-                        return $ocLazyLoad.load([
-                            'monospaced.mousewheel',
-                            'angular.filter'
-                        ])
                     }]
                 },
                 templateUrl: 'admin/admin.tpl.html',
