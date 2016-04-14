@@ -2,6 +2,7 @@
 module.exports = function(grunt) {
     // Load all tasks
     require('load-grunt-tasks')(grunt);
+    grunt.loadNpmTasks('main-bower-files');
     // Show elapsed time
     require('time-grunt')(grunt);
 
@@ -17,6 +18,21 @@ module.exports = function(grunt) {
                 'Gruntfile.js',
                 'src/**/*.js'
             ]
+        },
+        bower: {
+            flat: { /* flat folder/file structure */
+                dest: 'dist/vendor',
+                options: {
+                    checkExistence: true,
+                    debugging: true,
+                    includeDev: false,
+                    overrides:{
+                        angular: {
+                            ignore: true
+                        }
+                    }
+                }
+            }
         },
         less: {
             dev: {
@@ -34,6 +50,20 @@ module.exports = function(grunt) {
         },
         concat: {
             // config dynamically generated - see the prepModules custom task
+            webapps: {
+                options: {
+                    process: true
+                },
+                src: ['dist/**/*.js', 'src/webapps.js', '!dist/webapps.js', '!dist/**/*.min.js', '!dist/vendor/**/*.js'],
+                dest: 'dist/ualib-webapps.js'
+            },
+            index: {
+                options: {
+                    process: true
+                },
+                src: ['src/index.html'],
+                dest: 'dist/index.html'
+            }
         },
         clean: {
             tpls: ['dist/**/*-templates.js']
@@ -49,44 +79,6 @@ module.exports = function(grunt) {
                     from: /(wwwdev2?)/g,
                     to: 'www'
                 }]
-            }
-        },
-        bower_concat: {
-            all: {
-                dest: 'dist/vendor.js',
-                cssDest: 'dist/vendor.css',
-                exclude: [
-                    'ualib-ui'
-                ]
-            }
-        },
-        bowercopy: {
-            peer: {
-                options: {
-                    destPrefix: 'src/modules'
-                },
-                // By not specifying a destination, you are denoting
-                // that the lodash directory structure should be maintained
-                // when copying.
-                // For example, one of the files copied here is
-                // 'lodash/dist/lodash.js' -> 'public/js/libs/lodash/dist/lodash.js'
-                src: 'ualib*/dist/**/*.js'
-            }
-        },
-        bowerInstall: {
-            target: {
-                // Point to the files that should be updated when
-                // you run `grunt bower-install`
-                src: [
-                    'src/index.html'
-                ],
-
-                // Optional:
-                // ---------
-                cwd: '',
-                dependencies: false,
-                devDependencies: true,
-                exclude: ['bootstrap']
             }
         },
         autoprefixer: {

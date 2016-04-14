@@ -4,16 +4,23 @@ angular.module('ualib.computers.service', [
 
     .service('Computers', ['compSoftFactory', '$timeout', '$q', '$rootScope', function(compSoftFactory, $timeout, $q, $rootScope){
         var _params = {};
+        var _options = {
+            noRefresh: false
+        };
         var _refresh = null;
         var _cancel = false;
         var self = this;
 
         this.buildings = [];
         
-        this.init = function(params){
+        this.init = function(params, opt){
             var deferred = $q.defer();
             params = angular.isDefined(params) ? params : {};
             _params = params;
+            opt = angular.isDefined(opt) ? opt : {};
+
+
+            angular.extend(_options, opt);
 
             if (_refresh) {
                 self.cancelRefresh();
@@ -21,7 +28,9 @@ angular.module('ualib.computers.service', [
             
             getComputers().$promise.then(function(data){
                 self.buildings = angular.copy(data.buildings);
-                refresh();
+                if (_options.noRefresh === false){
+                    refresh();
+                }
                 deferred.resolve();
             });
 

@@ -1,5 +1,5 @@
 {
-  "name": "webapps",
+  "name": "ualib-webapps",
   "version": "0.0.0",
   "description": "Central Angular application to load other UA Libraries' web apps as modules",
   "repository": {
@@ -24,10 +24,8 @@
     "grunt-contrib-copy": "~0.8.0",
     "grunt-bump": "~0.3.0",
     "grunt-html2js": "~0.3.0",
-    "grunt-bower-concat": "~0.4.0",
-    "grunt-bowercopy": "~1.2.0",
-    "grunt-bower-install": "~1.6.0",
     "grunt-contrib-clean": "~0.7.0",
-    "grunt-text-replace": "~0.4.0"
+    "grunt-text-replace": "~0.4.0",
+    "main-bower-files": "~2.11.1"
   }
 }

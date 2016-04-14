@@ -87,15 +87,9 @@ angular.module('ualib.computers.maps', [])
                 if (params.objects){
                     self.objects = angular.copy(params.objects);
                 }
-                if (params.scalar){
-                    self.scalarOffset = params.scalar;
-                }
-                if (params.yOffset){
-                    self.yOffset = params.yOffset;
-                }
                 self.canvas = params.canvas;
                 self.ctx = self.canvas.getContext('2d');
-                self.loadImage(params.src, params.width, params.height).then(function(){
+                self.loadImage(params.src).then(function(){
                     self.setDefaults();
                     self.draw();
                     deferred.resolve();
@@ -113,11 +107,9 @@ angular.module('ualib.computers.maps', [])
             }
         };
 
-        this.loadImage = function(src, width, height){
+        this.loadImage = function(src){
             var deferred = $q.defer();
             self.image = new Image();
-            self.image.width = width;
-            self.image.height = height;
 
             self.image.onload = function(){
                 deferred.resolve();
@@ -133,22 +125,21 @@ angular.module('ualib.computers.maps', [])
             // Save matrix state
             self.ctx.save();
 
-            self.y -= self.yOffset*self.scalar; // CUSTOM modification for digital signage - temporary
             // Translate matrix to (x, y) then scale matrix
             self.ctx.translate(self.x, self.y);
             self.ctx.scale(self.scalar, self.scalar);
 
             // Translate matrix to (x, y) values representing the distance to the image's center
-            self.ctx.translate(self.width/2, self.height/2);
+            self.ctx.translate(self.image.width/2, self.image.height/2);
             // Rotate matrix
             self.ctx.rotate(self.angle);
             // Translate matrix back to state before it was translated to the (x, y) matching the image's center
-            self.ctx.translate(-self.width/2, -self.height/2);
+            self.ctx.translate(-self.image.width/2, -self.image.height/2);
 
             // Draw image to canvas
             self.ctx.drawImage(self.image, 0, 0);
-
             self.drawObjects();
+
             // Restore matrix to it's saved state.
             // If the matrix was not saved, then altered, then restored
             // 	for every draw, then the transforms would stack (i.e., without save/restore
@@ -167,32 +158,50 @@ angular.module('ualib.computers.maps', [])
 
                 for (var i = 0, len = self.objects.desktops.length; i < len; i++){
                     var comp = self.objects.desktops[i];
-                    var x = parseInt(comp.coordinates.x)-2;
-                    var y = parseInt(comp.coordinates.y)-5;
+                    var x = comp.coordinates.x;
+                    var y = comp.coordinates.y;
 
                     self.ctx.save();
+                    self.ctx.translate(x, y);
                     if (comp.status !== 3){
                         self.ctx.fillStyle = styles.desktops.taken.color;
                     }
 
                     if (comp.os === 1){
-                        self.ctx.fillRect(x, y, 13, 13);
+                        self.ctx.fillRect(2, 2, 13, 13);
                         /*if (parseInt(comp.monitors) > 1){
                             self.ctx.fillRect(x+5, y-5, 15, 15);
                             self.ctx.clearRect(x+5, y, 10, 10);
                         }*/
+                        if (comp.selected){
+                            self.ctx.lineWidth = 5;
+                            self.ctx.strokeStyle = '#00ff00';
+                            self.ctx.strokeRect(0, 0, 13, 13);
+                        };
                     }
                     else if (comp.os === 2){
-                        x += 7;
-                        y += 7;
 
                         self.ctx.beginPath();
-                        self.ctx.arc(x, y, 7, 0, 2*Math.PI);
+                        self.ctx.arc(7, 7, 7, 0, 2*Math.PI);
                         self.ctx.fill();
+                        if (comp.selected){
+                            self.ctx.lineWidth = 5;
+                            self.ctx.strokeStyle = '#00ff00';
+                            self.ctx.stroke();
+                        }
                     }
                     self.ctx.restore();
 
                 }
+            }
+            if (self.objects.hasOwnProperty('selectRect')){
+                var rect = angular.copy(self.objects.selectRect);
+                self.ctx.save();
+                self.ctx.setLineDash([6, 4]);
+                self.ctx.strokeStyle = '#333';
+                self.ctx.strokeRect(rect.x, rect.y, rect.w, rect.h);
+                self.ctx.restore();
+
             }
         };
 
@@ -200,7 +209,6 @@ angular.module('ualib.computers.maps', [])
             var width_ratio = (self.canvas.width - self.margin.width - self.offset.width) / self.image.width;
             var height_ratio = (self.canvas.height - self.margin.height - self.offset.height) / self.image.height;
             self.scalar = Math.min(width_ratio, height_ratio);
-            self.scalar += self.scalarOffset;
             /*console.log({w_ratio: width_ratio, h_ratio: height_ratio});
              console.log('width_ratio = ('+self.canvas.width+' - ('+self.margin.width+' + '+self.offset.width+')) / '+self.image.width);
              console.log('height_ratio = ('+self.canvas.height+' - ('+self.margin.height+' + '+self.offset.height+')) / '+self.image.height);*/
@@ -245,5 +253,11 @@ angular.module('ualib.computers.maps', [])
                 self.x *= self.canvas.width/self.prev.canvas_width;
                 self.y *= self.canvas.height/self.prev.canvas_height;
             }
+        };
+
+        this.getSelectedObjects = function(){
+            self.objects.filter(function(comp){
+                return comp.selected;
+            });
         };
     }]);

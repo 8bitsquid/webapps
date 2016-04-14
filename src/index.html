@@ -1,0 +1,54 @@
+<!doctype html>
+<html class="no-js" ng-app="ualib" lang="en-US">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Web Apps Test Site | The University of Alabama Libraries</title>
+    <link rel='stylesheet' id='open-sans-css'  href='//fonts.googleapis.com/css?family=Open+Sans%3A300italic%2C400italic%2C600italic%2C300%2C400%2C600&#038;subset=latin%2Clatin-ext&#038;ver=4.1.1' type='text/css' media='all' />
+    <link rel='stylesheet'  href='//rawgit.com/ualibweb/roots-ualib/master/assets/css/main.css'/>
+    <link rel='stylesheet'  href='<%=pkg.name%>.css'/>
+</head>
+<body class="home page page-id-1046 page-template-default logged-in admin-bar no-customize-support" ng-class="appClass">
+
+<!--[if lt IE 8]>
+<div class="alert alert-warning">
+    You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.    </div>
+<![endif]-->
+
+<header role="banner">
+    <nav class="navbar navbar-static-top navbar-mega-inverse" role="navigation">
+
+    </nav>
+</header>
+
+
+<div class="wrap">
+    <div class="container" role="document">
+        <div class="content row">
+            <main class="main" role="main">
+                <div ng-view></div>
+            </main><!-- /.main -->
+        </div><!-- /.content -->
+    </div><!-- /.wrap -->
+</div>
+
+<footer class="content-info" role="contentinfo">
+    <div class="footer-wrapper">
+
+    </div>
+    <div class="sub-footer">
+
+    </div>
+</footer>
+
+<script type='text/javascript' src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.28/angular.js'></script>
+<script type='text/javascript' src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.28/angular-animate.js'></script>
+<script type='text/javascript' src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.28/angular-route.js'></script>
+<script type='text/javascript' src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.28/angular-resource.js'></script>
+<script type='text/javascript' src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.28/angular-sanitize.js'></script>
+<script type='text/javascript' src='vendor/ocLazyLoad.js'></script>
+<script type='text/javascript' src='<%=pkg.name%>.js'></script>
+
+</body>
+</html>
